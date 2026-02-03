@@ -222,267 +222,152 @@
                 <div id="mainDeckGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
             </div>
 
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-slate-300">Input: Bulk Batches</h3>
-                <div class="text-xs text-right text-blue-400 font-mono" id="totalBulkDisplay">0 / 16520 kg</div>
+            <!-- Bulk Source -->
+            <div class="lg:col-span-1 bg-slate-800 p-4 rounded-lg shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-slate-300">Input: Bulk Items</h3>
+                    <div class="text-xs text-right">
+                        <div class="text-slate-500">Enter loose pcs (max 20)</div>
+                        <div class="text-blue-400 font-mono" id="totalBulkDisplay">0 / 16520 kg</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2" id="bulkList"></div>
             </div>
+        </div>
 
-            <!-- Quick Bulk Grid (Recovered) -->
-            <div class="mb-4">
-                <label class="text-[10px] text-slate-500 uppercase mb-1 block">Quick Add (Weight Only)</label>
-                <div class="grid grid-cols-5 gap-1" id="bulkList">
-                    <input type="number" data-idx="0" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="1" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="2" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="3" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="4" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="5" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="6" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="7" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="8" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="9" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="10" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="11" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="12" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="13" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="14" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="15" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="16" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="17" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="18" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" data-idx="19" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                </div>
-            </div>
-
-            <!-- Batch Entry Form -->
-            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 space-y-3 mb-4">
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[10px] text-slate-500 uppercase">Qty</label>
-                        <input type="number" id="batchQty"
-                            class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
-                            placeholder="10">
+        <!-- Action -->
+        <div class="flex flex-col items-center space-y-4 my-8">
+            <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md px-4">
+                <button id="optimizeBtn"
+                    class="flex-1 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 border border-blue-400">
+                    <span class="text-2xl">⚡</span>
+                    <div class="flex flex-col items-start leading-tight text-left">
+                        <span class="text-lg">AUTO-RELOCATE</span>
+                        <span class="text-[10px] font-normal opacity-80 uppercase">Target Index 20.0</span>
                     </div>
-                    <div>
-                        <label class="text-[10px] text-slate-500 uppercase">Wt/Pc (kg)</label>
-                        <input type="number" id="batchWt"
-                            class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
-                            placeholder="50">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-500 uppercase">Dims (L x W x H) cm</label>
-                    <div class="grid grid-cols-3 gap-1">
-                        <input type="number" id="batchL"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="L">
-                        <input type="number" id="batchW"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="W">
-                        <input type="number" id="batchH"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="H">
-                    </div>
-                </div>
-                <button onclick="addBatch()"
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded transition shadow-lg">
-                    + ADD BATCH
                 </button>
-                <div id="batchError" class="text-[10px] text-red-400 font-bold hidden">Error msg</div>
+                <button id="resetBtn"
+                    class="bg-slate-700 hover:bg-red-600 active:bg-red-700 text-slate-300 hover:text-white px-4 py-4 rounded-xl font-bold transition shadow-lg flex flex-row sm:flex-col items-center justify-center gap-2 border border-slate-600 sm:w-24">
+                    <span class="text-2xl">↺</span>
+                    <span class="text-xs uppercase">Reset All</span>
+                </button>
             </div>
-
-            <!-- Batches List -->
-            <div class="flex-1 overflow-y-auto min-h-[150px] space-y-2 pr-1" id="batchList">
-                <!-- Batches injected here -->
-                <div class="text-center text-slate-600 text-xs italic mt-4">No batches added</div>
+            <div id="optStatus" class="text-xs text-yellow-500 h-4 font-mono font-bold tracking-tight"></div>
+            <div id="resetFeedback" class="hidden text-xs text-red-400 font-bold animate-pulse">SYSTEM RESETTING...
             </div>
         </div>
-    </div>
 
-    <!-- Action -->
-    <div class="flex flex-col items-center space-y-4 my-8">
-        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md px-4">
-            <button id="optimizeBtn"
-                class="flex-1 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 border border-blue-400">
-                <span class="text-2xl">⚡</span>
-                <div class="flex flex-col items-start leading-tight text-left">
-                    <span class="text-lg">AUTO-RELOCATE</span>
-                    <span class="text-[10px] font-normal opacity-80 uppercase">Target Index 20.0</span>
-                </div>
-            </button>
-            <button id="resetBtn"
-                class="bg-slate-700 hover:bg-red-600 active:bg-red-700 text-slate-300 hover:text-white px-4 py-4 rounded-xl font-bold transition shadow-lg flex flex-row sm:flex-col items-center justify-center gap-2 border border-slate-600 sm:w-24">
-                <span class="text-2xl">↺</span>
-                <span class="text-xs uppercase">Reset All</span>
-            </button>
-        </div>
-        <div id="optStatus" class="text-xs text-yellow-500 h-4 font-mono font-bold tracking-tight"></div>
-        <div id="resetFeedback" class="hidden text-xs text-red-400 font-bold animate-pulse">SYSTEM RESETTING...
-        </div>
-    </div>
+        <!-- RESULTS / PLAN -->
+        <div id="resultsSection" class="hidden space-y-6">
 
-    <!-- RESULTS / PLAN -->
-    <div id="resultsSection" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-700 p-6 rounded-xl shadow-2xl">
+                <h3 class="text-xl font-bold text-green-400 mb-6 flex items-center gap-2">
+                    <span>📋</span> Relocation Plan
+                </h3>
 
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-xl shadow-2xl">
-            <h3 class="text-xl font-bold text-green-400 mb-6 flex items-center gap-2">
-                <span>📋</span> Relocation Plan
-            </h3>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Lower Deck Instructions -->
-                <div class="overflow-x-auto">
-                    <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Lower Deck (Bulk)
-                        Allocation</h4>
-                    <div class="rounded-lg border border-slate-700 min-w-[300px]">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-800 text-slate-300">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">Compartment</th>
-                                    <th class="px-4 py-3 text-left">Assigned Items (kg)</th>
-                                    <th class="px-4 py-3 text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="lowerPlanTable"></tbody>
-                        </table>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Lower Deck Instructions -->
+                    <div class="overflow-x-auto">
+                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Lower Deck (Bulk)
+                            Allocation</h4>
+                        <div class="rounded-lg border border-slate-700 min-w-[300px]">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-800 text-slate-300">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Compartment</th>
+                                        <th class="px-4 py-3 text-left">Assigned Items (kg)</th>
+                                        <th class="px-4 py-3 text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="lowerPlanTable"></tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Main Deck Instructions -->
-                <div class="overflow-x-auto">
-                    <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Main Deck
-                        Allocation</h4>
-                    <div class="rounded-lg border border-slate-700 max-h-[400px] overflow-y-auto min-w-[300px]">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-800 text-slate-300 sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">Position</th>
-                                    <th class="px-4 py-3 text-right">Assigned Weight (kg)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="mainPlanTable"></tbody>
-                        </table>
+                    <!-- Main Deck Instructions -->
+                    <div class="overflow-x-auto">
+                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Main Deck
+                            Allocation</h4>
+                        <div class="rounded-lg border border-slate-700 max-h-[400px] overflow-y-auto min-w-[300px]">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-800 text-slate-300 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Position</th>
+                                        <th class="px-4 py-3 text-right">Assigned Weight (kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="mainPlanTable"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Loadsheet Summary -->
-        <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
-            <h3 class="font-semibold text-slate-300 mb-4 border-b border-slate-600 pb-1">Projects Loadsheet Summary
-                (After Relocation)</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-slate-400 uppercase bg-slate-700">
-                        <tr>
-                            <th class="px-4 py-2">Item</th>
-                            <th class="px-4 py-2 text-right">Weight (kg)</th>
-                            <th class="px-4 py-2 text-right">Index</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700 text-slate-300">
-                        <tr class="bg-slate-700/50">
-                            <td class="px-4 py-2">
-                                <div class="flex flex-col">
-                                    <span>Total Load</span>
-                                    <div class="flex gap-2 text-[10px] mt-1">
-                                        <span
-                                            class="bg-blue-900/40 text-blue-300 px-1 rounded border border-blue-500/30">Main:
-                                            <span id="val-main-idx" class="font-bold">0.0</span></span>
-                                        <span
-                                            class="bg-indigo-900/40 text-indigo-300 px-1 rounded border border-indigo-500/30">Lower:
-                                            <span id="val-lower-idx" class="font-bold">0.0</span></span>
+            <!-- Loadsheet Summary -->
+            <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
+                <h3 class="font-semibold text-slate-300 mb-4 border-b border-slate-600 pb-1">Projects Loadsheet Summary
+                    (After Relocation)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-700">
+                            <tr>
+                                <th class="px-4 py-2">Item</th>
+                                <th class="px-4 py-2 text-right">Weight (kg)</th>
+                                <th class="px-4 py-2 text-right">Index</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700 text-slate-300">
+                            <tr class="bg-slate-700/50">
+                                <td class="px-4 py-2">Total Load</td>
+                                <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg"
+                                    id="val-load-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg">
+                                    <div class="flex flex-col items-end">
+                                        <span id="val-load-idx">0.0</span>
+                                        <div class="w-32 h-2 bg-slate-600 rounded-full mt-1 overflow-hidden">
+                                            <div id="idx-progress"
+                                                class="h-full bg-blue-500 transition-all duration-500"
+                                                style="width: 50%"></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg"
-                                id="val-load-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg">
-                                <div class="flex flex-col items-end">
-                                    <span id="val-load-idx">0.0</span>
-                                    <div class="w-32 h-2 bg-slate-600 rounded-full mt-1 overflow-hidden">
-                                        <div id="idx-progress" class="h-full bg-blue-500 transition-all duration-500"
-                                            style="width: 50%"></div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2">Zero Fuel Weight (ZFW)</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-idx">0.0</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2 flex flex-col">
-                                <span>Takeoff Fuel</span>
-                                <span class="text-xs text-slate-500">(FOB - 380 Taxi)</span>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-idx">0.0</td>
-                        </tr>
-                        <tr class="bg-slate-700/30 font-bold border-t border-slate-500/50">
-                            <td class="px-4 py-2">TOW</td>
-                            <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-idx">0.0</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2 text-slate-400 flex flex-col">
-                                <span>Remaining Fuel (@ LNDG)</span>
-                                <span class="text-xs text-slate-500">(TO Fuel - Trip Fuel)</span>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-rem-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-idx">0.0</td>
-                        </tr>
-                        <tr class="border-t border-slate-600">
-                            <td class="px-4 py-2">Landing Weight (LW)</td>
-                            <td class="px-4 py-2 text-right font-mono" id="val-lw-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono" id="val-lw-idx">0.0</td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">Zero Fuel Weight (ZFW)</td>
+                                <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-idx">0.0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 flex flex-col">
+                                    <span>Takeoff Fuel</span>
+                                    <span class="text-xs text-slate-500">(FOB - 380 Taxi)</span>
+                                </td>
+                                <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-idx">0.0</td>
+                            </tr>
+                            <tr class="bg-slate-700/30 font-bold border-t border-slate-500/50">
+                                <td class="px-4 py-2">TOW</td>
+                                <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-idx">0.0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 text-slate-400 flex flex-col">
+                                    <span>Remaining Fuel (@ LNDG)</span>
+                                    <span class="text-xs text-slate-500">(TO Fuel - Trip Fuel)</span>
+                                </td>
+                                <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-rem-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-idx">0.0</td>
+                            </tr>
+                            <tr class="border-t border-slate-600">
+                                <td class="px-4 py-2">Landing Weight (LW)</td>
+                                <td class="px-4 py-2 text-right font-mono" id="val-lw-wt">0.0</td>
+                                <td class="px-4 py-2 text-right font-mono" id="val-lw-idx">0.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- JAVASCRIPT -->
@@ -504,17 +389,6 @@
 
         const FWD_VOL_LIMIT = 19.0;
         const AFT_VOL_LIMIT = 30.7;
-
-        // --- B757 PHYSICAL LIMITS (CM) ---
-        const DOOR_FWD = { w: 140, h: 108 };
-        const DOOR_AFT = { w: 140, h: 112 };
-
-        const COMP_LIMITS = {
-            cpt1: { maxL: 295, door: DOOR_FWD },
-            cpt2: { maxL: 560, door: DOOR_FWD },
-            cpt3: { maxL: 440, door: DOOR_AFT },
-            cpt4: { maxL: 608, door: DOOR_AFT }
-        };
 
         // DOW DATA
         // Tech Kit: +208kg, -1.0 Index
@@ -556,8 +430,8 @@
             hasTechKit: false,
             dow: 0, dowIndex: 0, fob: 0, trip: 0,
             mainDeck: Array(15).fill(0),
-            bulkBatches: [],
-            bulkItems: Array(20).fill(0), // Restore Quick Bulk Array
+            bulkItems: Array(20).fill(0),
+            bulkDims: Array(20).fill(0).map(() => ({ l: 0, w: 0, h: 0 })),
             lowerDeck: { cpt1: 0, cpt2: 0, cpt3: 0, cpt4: 0 },
             lowerDeckLists: { cpt1: [], cpt2: [], cpt3: [], cpt4: [] },
             resultsVisible: false
@@ -576,15 +450,6 @@
         }
 
         function init() {
-            // Global Error Boundary for Mobile Stability
-            window.onerror = function (msg, url, line) {
-                console.error("Global Error: " + msg + " at " + line);
-                return false;
-            };
-            window.onunhandledrejection = function (event) {
-                console.error("Unhandled Promise Rejection: " + event.reason);
-            };
-
             // AC Selection
             document.getElementById('acSelect').addEventListener('change', (e) => {
                 state.acType = e.target.value;
@@ -668,111 +533,6 @@
             setTimeout(() => m.classList.add('hidden'), 200);
         };
 
-
-
-        // --- BATCH INPUT LOGIC ---
-        window.addBatch = function () {
-            const qty = parseInt(document.getElementById('batchQty').value) || 0;
-            const wt = parseFloat(document.getElementById('batchWt').value) || 0;
-            const l = parseFloat(document.getElementById('batchL').value) || 0;
-            const w = parseFloat(document.getElementById('batchW').value) || 0;
-            const h = parseFloat(document.getElementById('batchH').value) || 0;
-
-            const errDiv = document.getElementById('batchError');
-
-            if (qty <= 0 || wt <= 0) {
-                errDiv.textContent = "Qty and Weight must be > 0";
-                errDiv.classList.remove('hidden');
-                return;
-            }
-
-            // Smart Door Cross-Section Check (Rotation)
-            if (l > 0 && w > 0 && h > 0) {
-                const maxDoorW = 140;
-                const maxDoorH = 112;
-
-                const d = [l, w, h].sort((a, b) => a - b);
-                const door = [maxDoorW, maxDoorH].sort((a, b) => a - b);
-
-                // If the two smallest sides don't fit the door opening (sorted)
-                if (d[0] > door[0] || d[1] > door[1]) {
-                    errDiv.textContent = `Item ${l}x${w}x${h} won't fit door (140x112) even rotated.`;
-                    errDiv.classList.remove('hidden');
-                    return;
-                }
-            }
-
-            const batch = {
-                id: Date.now(),
-                qty: qty,
-                weight: wt,
-                dims: { l, w, h }
-            };
-
-            state.bulkBatches.push(batch);
-
-            // Clear inputs
-            document.getElementById('batchQty').value = '';
-            document.getElementById('batchWt').value = '';
-            document.getElementById('batchL').value = '';
-            document.getElementById('batchW').value = '';
-            document.getElementById('batchH').value = '';
-            errDiv.classList.add('hidden');
-
-            renderBatchList();
-            updateTotalBulkDisplay();
-        };
-
-        window.removeBatch = function (id) {
-            state.bulkBatches = state.bulkBatches.filter(b => b.id !== id);
-            renderBatchList();
-            updateTotalBulkDisplay();
-        };
-
-        window.renderBatchList = function () {
-            const container = document.getElementById('batchList');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (!state.bulkBatches || state.bulkBatches.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-600 text-xs italic mt-4">No batches added</div>`;
-                return;
-            }
-
-            state.bulkBatches.forEach(b => {
-                const div = document.createElement('div');
-                div.className = "flex justify-between items-center bg-slate-700/50 p-2 rounded border border-slate-600 mb-2";
-                div.innerHTML = `
-                    <div class="leading-tight">
-                        <div class="text-white font-bold text-sm bg-slate-800 px-1 rounded inline-block">${b.qty}x</div>
-                        <div class="text-blue-400 font-bold inline-block ml-2">${b.weight} kg</div>
-                        <div class="text-[10px] text-slate-400 font-mono block mt-1">
-                           ${b.dims.l > 0 ? `${b.dims.l}x${b.dims.w}x${b.dims.h} cm` : 'No Dims'}
-                        </div>
-                    </div>
-                    <button onclick="removeBatch(${b.id})" class="text-red-400 hover:text-red-300 px-2 font-bold ml-2">×</button>
-                `;
-                container.appendChild(div);
-            });
-        };
-
-        window.updateTotalBulkDisplay = function () {
-            const batchWt = state.bulkBatches ? state.bulkBatches.reduce((sum, b) => sum + (b.qty * b.weight), 0) : 0;
-            const quickWt = state.bulkItems ? state.bulkItems.reduce((sum, val) => sum + (parseFloat(val) || 0), 0) : 0;
-            const totalWt = batchWt + quickWt;
-            const el = document.getElementById('totalBulkDisplay');
-            if (el) {
-                el.textContent = `${totalWt.toFixed(0)} / ${TOTAL_LOWER_CAPACITY} kg`;
-                if (totalWt > TOTAL_LOWER_CAPACITY) {
-                    el.classList.add('text-red-500');
-                    el.classList.remove('text-blue-400');
-                } else {
-                    el.classList.add('text-blue-400');
-                    el.classList.remove('text-red-500');
-                }
-            }
-        };
-
         window.handleReset = function () {
             // STATE LOCK: Prevent any code from saving data during this purge
             window.isResetting = true;
@@ -791,13 +551,12 @@
                 });
 
                 // 3. Reset Internal State Reference
-                // 3. Reset Internal State Reference
                 Object.assign(state, {
                     acType: '57', uldType: 'PMC', crew: '2+1', hasTechKit: false,
                     fob: 0, trip: 0,
                     mainDeck: Array(15).fill(0),
-                    bulkBatches: [],
-                    bulkItems: Array(20).fill(0), // Restore Quick Bulk
+                    bulkItems: Array(20).fill(0),
+                    bulkDims: Array(20).fill({ l: 0, w: 0, h: 0 }).map(() => ({ l: 0, w: 0, h: 0 })),
                     lowerDeck: { cpt1: 0, cpt2: 0, cpt3: 0, cpt4: 0 },
                     lowerDeckLists: { cpt1: [], cpt2: [], cpt3: [], cpt4: [] },
                     resultsVisible: false
@@ -872,10 +631,6 @@
 
                 calculateDow();
                 calculate();
-
-                // Final Sync for Batch Persistence
-                renderBatchList();
-                updateTotalBulkDisplay();
             } catch (e) {
                 console.error("Critical Load Failure", e);
             }
@@ -918,16 +673,6 @@
             document.getElementById('disp-dow').textContent = w;
             document.getElementById('disp-dowIdx').textContent = i.toFixed(2);
         }
-
-        // Helper to update Quick Bulk items from grid
-        window.updateBulkItem = function (input) {
-            const idx = parseInt(input.getAttribute('data-idx'));
-            const val = parseFloat(input.value) || 0;
-            state.bulkItems[idx] = val;
-            updateTotalBulkDisplay();
-            calculate();
-            saveState();
-        };
 
         function handleInput(e) {
             const field = e.target.dataset.field;
@@ -983,15 +728,31 @@
         }
 
         function renderBulkInputs() {
-            // Restore values into the static grid (Quick Add)
             const container = document.getElementById('bulkList');
-            if (!container) return;
+            container.innerHTML = '';
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[400px] overflow-y-auto pr-1';
 
-            const inputs = container.querySelectorAll('input');
-            inputs.forEach((input, i) => {
-                const val = state.bulkItems[i];
-                input.value = val > 0 ? val : '';
-            });
+            for (let i = 0; i < 20; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bg-slate-700/50 p-2 rounded border border-slate-600';
+
+                const wVal = state.bulkItems[i] || '';
+                const d = state.bulkDims[i] || { l: 0, w: 0, h: 0 };
+
+                wrapper.innerHTML =
+                    `<div class="flex gap-2 items-center justify-between mb-1">
+                        <span class="text-xs text-slate-400 w-4">#${i + 1}</span>
+                        <input type="number" inputmode="decimal" data-field="bulk-${i}" value="${wVal}" autocomplete="off"
+                            class="calc-input bg-slate-800 text-white p-1 rounded w-20 text-right text-sm border border-slate-600 focus:border-blue-500 outline-none" placeholder="kg">
+                        <button class="toggle-dim-btn text-[10px] bg-slate-600 hover:bg-blue-600 px-2 py-1 rounded text-slate-300 transition" data-idx="${i}">DIM</button>
+                    </div>
+                    <div id="dims-${i}" class="hidden grid grid-cols-3 gap-1 mt-1">
+                        <input type="number" inputmode="decimal" data-field="bulk-dim-l-${i}" value="${d.l || ''}" placeholder="L" class="calc-input bg-slate-800 text-slate-200 text-[10px] p-1 rounded text-center border border-slate-600 outline-none">
+                        <input type="number" inputmode="decimal" data-field="bulk-dim-w-${i}" value="${d.w || ''}" placeholder="W" class="calc-input bg-slate-800 text-slate-200 text-[10px] p-1 rounded text-center border border-slate-600 outline-none">
+                        <input type="number" inputmode="decimal" data-field="bulk-dim-h-${i}" value="${d.h || ''}" placeholder="H" class="calc-input bg-slate-800 text-slate-200 text-[10px] p-1 rounded text-center border border-slate-600 outline-none">
+                    </div>`;
+                container.appendChild(wrapper);
+            }
         }
 
         function calculate() {
@@ -1012,27 +773,20 @@
 
             setTimeout(() => {
                 try {
-                    console.log("Optimizing with combined bulk pool + search...");
+                    console.log("Optimizing with spread + limits...");
+                    // Use state.uldType
                     const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
                     const count = state.uldType === 'PMC' ? 13 : 15;
+
+                    // Limit check helper
                     const checkLimit = (idx) => getMainDeckLimit(state.uldType, idx);
 
-                    let mainItems = state.mainDeck.slice(0, count).filter(w => w > 0);
-
-                    // Prepare Fixed Bulk Pool (Merge Quick + Batches)
-                    let baseBulkPool = [];
-                    state.bulkItems.forEach((w, i) => {
-                        if (w > 0) baseBulkPool.push({ w, type: 'quick', dims: { l: 0, w: 0, h: 0 }, label: 'Quick' });
-                    });
-                    state.bulkBatches.forEach(batch => {
-                        for (let j = 0; j < batch.qty; j++) {
-                            baseBulkPool.push({ w: batch.weight, type: 'batch', dims: batch.dims, label: 'Batch' });
-                        }
-                    });
+                    let mainItems = state.mainDeck.slice(0, count).filter(function (w) { return w > 0 });
+                    let bulkItems = state.bulkItems.filter(function (w) { return w > 0 });
 
                     const globalMax = Math.max(4652, 4264);
-                    if (mainItems.some(w => w > globalMax)) {
-                        alert("One or more Main Deck items exceeds absolute maximum weight limit!");
+                    if (mainItems.some(function (w) { return w > globalMax })) {
+                        alert("One or more Main Deck items exceeds the absolute maximum weight limit (" + globalMax + "kg) for any position!");
                         return;
                     }
 
@@ -1040,80 +794,118 @@
 
                     let bestState = null;
                     let bestDiff = Infinity;
-                    let bestSpreadScore = Infinity;
+                    let bestSpreadScore = Infinity; // Lower is better (min peak utilization)
 
-                    for (let i = 0; i < 10000; i++) {
-                        const shuffledMain = [...mainItems].sort(() => Math.random() - 0.5);
+                    // Increased iterations for better search
+                    for (let i = 0; i < 15000; i++) {
+                        // 1. Shuffle Main Deck & Validate
+                        const shuffledMain = [...mainItems].sort(function () { return Math.random() - 0.5 });
                         let validMain = true;
                         for (let p = 0; p < count; p++) {
-                            if (shuffledMain[p] > checkLimit(p)) { validMain = false; break; }
+                            if (shuffledMain[p] > checkLimit(p)) {
+                                validMain = false;
+                                break;
+                            }
                         }
                         if (!validMain) continue;
 
+                        // 2. Shuffle Bulk
                         let buckets = [0, 0, 0, 0];
                         let bucketLists = [[], [], [], []];
                         let bucketVols = [0, 0, 0, 0];
                         let validBulk = true;
 
-                        const shuffledBulk = [...baseBulkPool].sort(() => Math.random() - 0.5);
+                        // We need indices to look up dimensions from state.bulkDims
+                        const bulkIndices = bulkItems.map((_, idx) => idx);
+                        const shuffledIndices = bulkIndices.sort(() => Math.random() - 0.5);
 
-                        for (let item of shuffledBulk) {
+                        for (let originalIdx of shuffledIndices) {
+                            const itemWeight = bulkItems[originalIdx]; // Wait, bulkItems is filtered val?
+                            // Ah, line 334: let bulkItems = state.bulkItems.filter(function (w) { return w > 0 });
+                            // This loses the index. I need to fix that.
+                        }
+
+                        // RE-FETCH items with indices
+                        const activeBulkItems = state.bulkItems
+                            .map((w, i) => ({ w, i, dims: state.bulkDims[i] }))
+                            .filter(obj => obj.w > 0);
+
+                        const shuffledBulkObjects = [...activeBulkItems].sort(() => Math.random() - 0.5);
+
+                        for (let itemObj of shuffledBulkObjects) {
                             let placed = false;
-                            const vol = (item.dims && item.dims.l) ? (item.dims.l * item.dims.w * item.dims.h) / 1000000 : 0;
+                            const itemWeight = itemObj.w;
+
+                            // Volume in m3
+                            const dim = itemObj.dims;
+                            const vol = (dim && dim.l && dim.w && dim.h) ? (dim.l * dim.w * dim.h) / 1000000 : 0;
+
+                            // Try random start to vary distribution
                             const start = Math.floor(Math.random() * 4);
 
                             for (let k = 0; k < 4; k++) {
                                 const b = (start + k) % 4;
-                                const cptKey = 'cpt' + (b + 1);
 
-                                // 1. Weight Check
-                                if (buckets[b] + item.w > LOWER_DECK_LIMITS[cptKey]) continue;
+                                // Weight Check
+                                if (buckets[b] + itemWeight > LOWER_DECK_LIMITS['cpt' + (b + 1)]) continue;
 
-                                // 2. Volume Check
-                                let groupVol = (b < 2) ? (bucketVols[0] + bucketVols[1] + vol) : (bucketVols[2] + bucketVols[3] + vol);
-                                if (b < 2 && groupVol > FWD_VOL_LIMIT) continue;
-                                if (b >= 2 && groupVol > AFT_VOL_LIMIT) continue;
+                                // Volume Check
+                                let fwdVol = bucketVols[0] + bucketVols[1];
+                                let aftVol = bucketVols[2] + bucketVols[3];
 
-                                // 3. Smart Dimension/Door Check
-                                if (item.dims && item.dims.l > 0) {
-                                    const limits = COMP_LIMITS[cptKey];
-                                    if (item.dims.l > limits.maxL) continue;
+                                if (b < 2) fwdVol += vol; else aftVol += vol;
 
-                                    // Smart Rotation Logic
-                                    const d = [item.dims.l, item.dims.w, item.dims.h].filter(v => v > 0).sort((a, b) => a - b);
-                                    const door = [limits.door.w, limits.door.h].sort((a, b) => a - b);
-                                    if (d.length >= 2) {
-                                        if (d[0] > door[0] || d[1] > door[1]) continue;
-                                    }
+                                if (fwdVol <= FWD_VOL_LIMIT && aftVol <= AFT_VOL_LIMIT) {
+                                    buckets[b] += itemWeight;
+                                    bucketVols[b] += vol;
+                                    // Store full object for re-shuffling/moving later
+                                    bucketLists[b].push(itemObj);
+                                    placed = true;
+                                    break;
                                 }
-
-                                buckets[b] += item.w;
-                                bucketVols[b] += vol;
-                                bucketLists[b].push(item);
-                                placed = true;
-                                break;
                             }
                             if (!placed) { validBulk = false; break; }
                         }
 
                         if (validBulk) {
                             let idx = 0;
-                            for (let b = 0; b < 4; b++) idx += getLowerDeckIndex('cpt' + (b + 1), buckets[b]);
-                            shuffledMain.forEach((w, pos) => { idx += w * (coeffs[pos] || 0); });
+                            idx += getLowerDeckIndex('cpt1', buckets[0]);
+                            idx += getLowerDeckIndex('cpt2', buckets[1]);
+                            idx += getLowerDeckIndex('cpt3', buckets[2]);
+                            idx += getLowerDeckIndex('cpt4', buckets[3]);
+
+                            shuffledMain.forEach(function (w, pos) { idx += w * (coeffs[pos] || 0); });
 
                             const diff = Math.abs(idx - 20);
+
+                            // SPREAD METRIC: Max % Utilization across bins
+                            // We want to minimize the peak utilization to spread the load
                             let maxUtil = 0;
                             for (let b = 0; b < 4; b++) {
                                 const util = buckets[b] / LOWER_DECK_MAX[b];
                                 if (util > maxUtil) maxUtil = util;
                             }
 
+                            // DECISION LOGIC
+                            // 1. If Index is drastically better (> 0.2 improvement), take it.
+                            // 2. If Index is similar (within 0.2), take the one with better Spread (lower maxUtil).
+
                             let isBetter = false;
-                            if (bestState === null) isBetter = true;
-                            else {
-                                const diffImp = bestDiff - diff;
-                                if (diffImp > 0.1) isBetter = true;
-                                else if (diffImp > -0.1 && maxUtil < bestSpreadScore) isBetter = true;
+
+                            if (bestState === null) {
+                                isBetter = true;
+                            } else {
+                                const diffImprovement = bestDiff - diff; // Positive = New is better
+
+                                if (diffImprovement > 0.1) {
+                                    // Significant Index improvement
+                                    isBetter = true;
+                                } else if (diffImprovement > -0.1) {
+                                    // Similar Index (within +/- 0.1) -> Check Spread
+                                    if (maxUtil < bestSpreadScore) {
+                                        isBetter = true;
+                                    }
+                                }
                             }
 
                             if (isBetter) {
@@ -1125,7 +917,7 @@
                     }
 
                     if (!bestState) {
-                        alert("Optimization Failed. Could not fit all items within weight/dimension/volume constraints.");
+                        alert("Optimization Failed. Could not find a valid arrangement matching all constraints.");
                         return;
                     }
 
@@ -1135,8 +927,23 @@
                         document.getElementById('resultsSection').classList.remove('hidden');
 
                         // Render Main Plan
-                        // REMOVED: Duplicate Main Deck rendering (was overwriting the new UI)
-                        // The renderResults() call below will handle the UI.
+                        const mainTable = document.getElementById('mainPlanTable');
+                        mainTable.innerHTML = '';
+                        for (let i = 0; i < count; i++) {
+                            const w = bestState.main[i];
+                            // Use state.uldType
+                            const limit = getMainDeckLimit(state.uldType, i);
+                            if (w > 0) {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML =
+                                    '<td class="px-4 py-2 border-b border-slate-700">' +
+                                    '<div class="font-bold text-blue-400">Position ' + (i + 1) + '</div>' +
+                                    '<div class="text-[10px] text-slate-500">Max ' + limit + ' kg</div>' +
+                                    '</td>' +
+                                    '<td class="px-4 py-2 border-b border-slate-700 text-right font-mono">' + w + ' kg</td>';
+                                mainTable.appendChild(tr);
+                            }
+                        }
 
                         state.lowerDeck.cpt1 = bestState.buckets[0];
                         state.lowerDeck.cpt2 = bestState.buckets[1];
@@ -1172,59 +979,48 @@
         // --- LIVE EDITING & RENDERING ---
 
         function renderResults() {
-            // Safety Check
-            if (!state.uldType) state.uldType = 'PMC';
-
+            // Use state.uldType
             const count = state.uldType === 'PMC' ? 13 : 15;
+
+            // 1. Render Main Deck (Editable)
             const mainTable = document.getElementById('mainPlanTable');
+            mainTable.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const w = state.mainDeck[i];
+                // Use state.uldType
+                const limit = getMainDeckLimit(state.uldType, i);
 
-            if (mainTable) {
-                mainTable.innerHTML = '';
+                // Show row if it has weight OR if it's empty but user might want to add? 
+                // Let's show ALL rows to allow moving things around easily.
+                // Or maybe just the ones with weight + option to add?
+                // For simplicity/cleanliness, let's show all positions.
 
-                for (let i = 0; i < count; i++) {
-                    const w = state.mainDeck[i] !== undefined ? state.mainDeck[i] : 0;
-                    const limit = getMainDeckLimit(state.uldType, i);
-                    const hasCargo = w > 0;
+                // Draggable Row Logic
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/50 transition duration-150 drop-zone";
+                tr.setAttribute('ondragover', 'handleMainDragOver(event)');
+                tr.setAttribute('ondrop', `handleMainDrop(event, ${i})`);
 
-                    // Simple, robust card HTML
-                    const cargoBox = hasCargo
-                        ? `<div class="bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 text-white rounded-lg p-2 cursor-grab active:cursor-grabbing flex items-center justify-between gap-3 min-w-[100px] transition-all transform active:scale-95" draggable="true" ondragstart="handleMainDragStart(event, ${i})">
-                            <div class="flex flex-col leading-none">
-                                <span class="text-[10px] font-bold opacity-75">CARGO</span>
-                                <span class="text-sm font-bold font-mono">${w} <span class="text-[10px]">kg</span></span>
-                            </div>
-                            <span class="text-xl opacity-60">::</span>
-                        </div>`
-                        : `<div class="border-2 border-dashed border-slate-700 hover:border-slate-500 rounded-lg p-2 flex items-center justify-center text-xs text-slate-600 min-h-[42px] w-full">
-                            Empty
-                        </div>`;
-
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/50 transition duration-150 drop-zone border-b border-slate-700/50 last:border-0";
-                    tr.setAttribute('ondragover', 'handleMainDragOver(event)');
-                    tr.setAttribute('ondrop', `handleMainDrop(event, ${i})`);
-
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 align-middle">
-                            <div class="font-bold text-blue-400 text-base">Position ${i + 1}</div>
-                            <div class="text-[10px] text-slate-500 font-mono">Max ${limit} kg</div>
-                        </td>
-                        <td class="px-4 py-3 text-right align-middle">
-                            <div class="flex items-center justify-end gap-2 w-full">
-                                <div class="flex-1 max-w-[140px]">${cargoBox}</div>
-                                <input type="number" 
-                                    value="${w > 0 ? w : ''}" 
-                                    placeholder="0" 
-                                    min="0" 
-                                    max="${limit}" 
-                                    step="1"
-                                    class="bg-slate-800 border ${w > limit ? 'border-red-500 text-red-400' : 'border-slate-600 text-white'} rounded p-2 text-right font-mono focus:border-blue-500 outline-none transition w-20 text-sm"
-                                    oninput="updateMainResult(${i}, this.value)">
-                            </div>
-                        </td>`;
-
-                    mainTable.appendChild(tr);
-                }
+                // Content
+                tr.innerHTML =
+                    `<td class="px-4 py-2 border-b border-slate-700 select-none">
+                        <div class="flex items-center gap-2">
+                             <div class="cursor-grab hover:text-blue-400 text-slate-600 active:cursor-grabbing" draggable="true" ondragstart="handleMainDragStart(event, ${i})">
+                                <span class="text-xl">::</span>
+                             </div>
+                             <div>
+                                <div class="font-bold text-blue-400">Position ${i + 1}</div>
+                                <div class="text-[10px] text-slate-500">Max ${limit} kg</div>
+                             </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-2 border-b border-slate-700 text-right">
+                        <input type="number" value="${w > 0 ? w : ''}" placeholder="0" min="0" max="${limit}" step="1"
+                            class="bg-slate-800 border ${w > limit ? 'border-red-500 text-red-400' : 'border-slate-600 text-white'} 
+                            rounded p-1 w-24 text-right font-mono focus:border-blue-500 outline-none transition"
+                            onchange="updateMainResult(${i}, this.value)">
+                    </td>`;
+                mainTable.appendChild(tr);
             }
 
             // 2. Render Lower Deck (Draggable)
@@ -1302,22 +1098,8 @@
             const val = parseFloat(newVal) || 0;
             state.mainDeck[posIndex] = val;
             calculateSummary();
-            // We do NOT re-render results here to keep focus on input
-            // But we must update the specific weight display in the card if distinct?
-            // Actually, re-rendering might kill input focus.
-            // Let's just update summary values.
-            // But if we want the "Box" to update size/color, we might need manual DOM update for that row.
-
-            // Allow "Box" update without losing focus:
-            const row = document.querySelector(`#mainPlanTable tr:nth-child(${posIndex + 1})`);
-            if (row) {
-                const boxContainer = row.querySelector('.cursor-grab')?.parentElement; // Rough finding
-                // Actually, calculateSummary updates global state.
-                // We should update the specific row's "Cargo Box" text if it exists.
-                const wtSpan = row.querySelector('.font-mono span'); // The weight text in the card
-                if (wtSpan) wtSpan.textContent = val + " kg";
-            }
-            saveState();
+            renderResults();
+            saveState(); // Fix: Persist manual fine-tuning
         };
 
         // Handlers for Drag & Drop
@@ -1445,38 +1227,19 @@
             const loadWt = totalMainWt + totalLowerWt;
             const loadIdx = totalMainIdx + totalLowerIdx;
 
-            // --- RESTORED LOGIC ---
-            // Get inputs
-            const fobInput = document.querySelector('input[data-field="fob"]');
-            const tripInput = document.querySelector('input[data-field="trip"]');
-            const fob = parseFloat(fobInput ? fobInput.value : 0) || 0;
-            const trip = parseFloat(tripInput ? tripInput.value : 0) || 0;
-
-            // Fixed values (DOW/DOI should ideally be inputs, but using defaults for now per previous code)
-            const dow = 42845; // Default DOW
-            const dowIdx = 48.0; // Default DOI
-
-            // 1. ZFW
-            const zfw = dow + loadWt;
-            const zfwIdx = dowIdx + loadIdx;
-
-            // 2. Fuel Index
-            const toFuel = fob - 380; // Taxi fuel
+            const TAXI = 380;
+            const toFuel = Math.max(0, state.fob - TAXI);
             const toFuelIdx = interpolateFuelIndex(toFuel);
+            const remFuel = Math.max(0, toFuel - state.trip);
+            const remFuelIdx = interpolateFuelIndex(remFuel);
 
-            // 3. TOW
+            const zfw = state.dow + loadWt;
+            const zfwIdx = state.dowIndex + loadIdx;
             const tow = zfw + toFuel;
             const towIdx = zfwIdx + toFuelIdx;
-
-            // 4. Landing
-            const remFuel = toFuel - trip;
-            const remFuelIdx = interpolateFuelIndex(remFuel);
-            const lw = zfw + remFuel;
+            const lw = tow - state.trip;
             const lwIdx = zfwIdx + remFuelIdx;
 
-            // UPDATE UI ELEMENTS
-            updateVal('val-main-idx', totalMainIdx);
-            updateVal('val-lower-idx', totalLowerIdx);
             updateVal('val-load-wt', loadWt);
             updateVal('val-load-idx', loadIdx);
             updateVal('val-zfw-wt', zfw);
