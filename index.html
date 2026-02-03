@@ -1453,8 +1453,9 @@
             const trip = parseFloat(tripInput ? tripInput.value : 0) || 0;
 
             // Fixed values (DOW/DOI should ideally be inputs, but using defaults for now per previous code)
-            const dow = 42845; // Default DOW
-            const dowIdx = 48.0; // Default DOI
+            // Fixed values (DOW/DOI should ideally be inputs, but using defaults for now per previous code)
+            const dow = state.dow;
+            const dowIdx = state.dowIndex;
 
             // 1. ZFW
             const zfw = dow + loadWt;
