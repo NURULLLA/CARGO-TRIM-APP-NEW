@@ -18,9 +18,7 @@
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             overscroll-behavior-y: contain;
-            /* Prevents pull-to-refresh during drag */
             -webkit-tap-highlight-color: transparent;
-            /* Clean touch feedback */
         }
 
         ::-webkit-scrollbar {
@@ -36,12 +34,10 @@
             border-radius: 4px;
         }
 
-        /* Drag & Drop Styles */
         .draggable-item {
             cursor: grab;
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
             touch-action: none;
-            /* Critical for mobile drag & drop */
             -webkit-user-select: none;
             user-select: none;
         }
@@ -63,16 +59,13 @@
             transform: scale(1.01);
         }
 
-        /* Improved touch targets for inputs on mobile */
         @media (max-width: 768px) {
 
             input[type="number"],
             select,
             button {
                 font-size: 16px;
-                /* Prevents iOS zoom on focus */
                 min-height: 44px;
-                /* A11y touch target size */
             }
 
             .draggable-item {
@@ -88,13 +81,13 @@
             border-color: #ef4444 !important;
         }
 
-        /* Hide number spin buttons */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
     </style>
+
     <!-- Mobile Drag-and-Drop Polyfill -->
     <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
 </head>
@@ -213,6 +206,7 @@
 
         <!-- Inputs Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
             <!-- Main Deck Source -->
             <div class="lg:col-span-2 bg-slate-800 p-4 rounded-lg shadow-lg">
                 <div class="flex justify-between items-center mb-4">
@@ -380,7 +374,8 @@
                                 <tr>
                                     <th class="px-4 py-3 text-left">Compartment</th>
                                     <th class="px-4 py-3 text-left">Assigned Items (kg)</th>
-                                    <th class="px-4 py-3 text-right">Total</th>
+                                    <th class="px-4 py-3 text-right">Weight</th>
+                                    <th class="px-4 py-3 text-right">Index (IU)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="lowerPlanTable"></tbody>
@@ -397,7 +392,8 @@
                             <thead class="bg-slate-800 text-slate-300 sticky top-0">
                                 <tr>
                                     <th class="px-4 py-3 text-left">Position</th>
-                                    <th class="px-4 py-3 text-right">Assigned Weight (kg)</th>
+                                    <th class="px-4 py-3 text-right">Weight (kg)</th>
+                                    <th class="px-4 py-3 text-right">Index (IU)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="mainPlanTable"></tbody>
@@ -441,12 +437,13 @@
                                 <div class="flex flex-col items-end">
                                     <span id="val-load-idx">0.0</span>
                                     <div class="w-32 h-2 bg-slate-600 rounded-full mt-1 overflow-hidden">
-                                        <div id="idx-progress" class="h-full bg-blue-500 transition-all duration-500"
-                                            style="width: 50%"></div>
+                                        <div id="idx-progress"
+                                            class="h-full bg-blue-500 transition-all duration-500 w-1/2"></div>
                                     </div>
                                 </div>
                             </td>
                         </tr>
+
                         <tr>
                             <td class="px-4 py-2">Zero Fuel Weight (ZFW)</td>
                             <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-wt">0.0</td>
@@ -562,6 +559,9 @@
             lowerDeckLists: { cpt1: [], cpt2: [], cpt3: [], cpt4: [] },
             resultsVisible: false
         };
+
+
+
 
         function getMainDeckLimit(type, posIndex) {
             if (type === 'PAG') {
@@ -814,7 +814,7 @@
             } catch (e) {
                 console.error("Purge Error", e);
                 // Last ditch: Wipe DOM and force reload
-                document.body.innerHTML = '<div style="background:#0f172a;color:#ef4444;height:100vh;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-weight:bold;">RESETTING SYSTEM...</div>';
+                document.body.innerHTML = '<div class="flex items-center justify-center h-screen bg-slate-900 text-red-500 font-bold font-sans">RESETTING SYSTEM...</div>';
                 window.location.reload(true);
             }
         };
@@ -971,13 +971,16 @@
                 const limit = getMainDeckLimit(state.uldType, i);
                 const val = state.mainDeck[i];
                 const div = document.createElement('div');
-                div.className = 'bg-slate-700 p-2 rounded border border-slate-600';
+                const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
+                const idxEffect = val > 0 ? (val * (coeffs[i] || 0)).toFixed(2) : '0.00';
+
                 div.innerHTML = '<div class="flex justify-between items-end mb-1">' +
-                    '<label class="text-xs text-slate-400">Pos ' + (i + 1) + '</label>' +
-                    '<span class="text-[10px] text-slate-600">Max ' + limit + '</span>' +
+                    '<label class="text-xs text-slate-400 font-bold">POS ' + (i + 1) + '</label>' +
+                    '<span class="text-[10px] text-blue-400 font-mono">Idx: ' + idxEffect + '</span>' +
                     '</div>' +
                     '<input type="number" inputmode="decimal" data-field="main-' + i + '" value="' + (val || '') + '" autocomplete="off" ' +
-                    'class="calc-input bg-slate-800 border ' + (val > limit ? 'border-red-500 text-red-400' : 'border-slate-700') + ' rounded p-2 text-right text-white focus:border-blue-500 outline-none w-full" placeholder="kg">';
+                    'class="calc-input bg-slate-800 border ' + (val > limit ? 'border-red-500 text-red-400' : 'border-slate-700') + ' rounded p-2 text-right text-white font-mono focus:border-blue-500 outline-none w-full" placeholder="kg">' +
+                    '<div class="text-[10px] text-slate-600 mt-1 text-right">Max ' + limit + '</div>';
                 container.appendChild(div);
             }
         }
@@ -1172,39 +1175,39 @@
         // --- LIVE EDITING & RENDERING ---
 
         function renderResults() {
-            // Safety Check
             if (!state.uldType) state.uldType = 'PMC';
 
             const count = state.uldType === 'PMC' ? 13 : 15;
             const mainTable = document.getElementById('mainPlanTable');
+            if (!mainTable) return;
+            mainTable.innerHTML = '';
 
-            if (mainTable) {
-                mainTable.innerHTML = '';
+            const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
 
-                for (let i = 0; i < count; i++) {
-                    const w = state.mainDeck[i] !== undefined ? state.mainDeck[i] : 0;
-                    const limit = getMainDeckLimit(state.uldType, i);
-                    const hasCargo = w > 0;
+            for (let i = 0; i < count; i++) {
+                const w = state.mainDeck[i] !== undefined ? state.mainDeck[i] : 0;
+                const limit = getMainDeckLimit(state.uldType, i);
+                const hasCargo = w > 0;
+                const IUcol = w > 0 ? (w * (coeffs[i] || 0)).toFixed(2) : '0.00';
 
-                    // Simple, robust card HTML
-                    const cargoBox = hasCargo
-                        ? `<div class="bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 text-white rounded-lg p-2 cursor-grab active:cursor-grabbing flex items-center justify-between gap-3 min-w-[100px] transition-all transform active:scale-95" draggable="true" ondragstart="handleMainDragStart(event, ${i})">
+                const cargoBox = hasCargo
+                    ? `<div class="bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/50 text-white rounded-lg p-2 cursor-grab active:cursor-grabbing flex items-center justify-between gap-3 min-w-[100px] transition-all transform active:scale-95" draggable="true" ondragstart="handleMainDragStart(event, ${i})">
                             <div class="flex flex-col leading-none">
                                 <span class="text-[10px] font-bold opacity-75">CARGO</span>
                                 <span class="text-sm font-bold font-mono">${w} <span class="text-[10px]">kg</span></span>
                             </div>
                             <span class="text-xl opacity-60">::</span>
                         </div>`
-                        : `<div class="border-2 border-dashed border-slate-700 hover:border-slate-500 rounded-lg p-2 flex items-center justify-center text-xs text-slate-600 min-h-[42px] w-full">
+                    : `<div class="border-2 border-dashed border-slate-700 hover:border-slate-500 rounded-lg p-2 flex items-center justify-center text-xs text-slate-600 min-h-[42px] w-full">
                             Empty
                         </div>`;
 
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/50 transition duration-150 drop-zone border-b border-slate-700/50 last:border-0";
-                    tr.setAttribute('ondragover', 'handleMainDragOver(event)');
-                    tr.setAttribute('ondrop', `handleMainDrop(event, ${i})`);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/50 transition duration-150 drop-zone border-b border-slate-700/50 last:border-0";
+                tr.setAttribute('ondragover', 'handleMainDragOver(event)');
+                tr.setAttribute('ondrop', `handleMainDrop(event, ${i})`);
 
-                    tr.innerHTML = `
+                tr.innerHTML = `
                         <td class="px-4 py-3 align-middle">
                             <div class="font-bold text-blue-400 text-base">Position ${i + 1}</div>
                             <div class="text-[10px] text-slate-500 font-mono">Max ${limit} kg</div>
@@ -1221,14 +1224,18 @@
                                     class="bg-slate-800 border ${w > limit ? 'border-red-500 text-red-400' : 'border-slate-600 text-white'} rounded p-2 text-right font-mono focus:border-blue-500 outline-none transition w-20 text-sm"
                                     oninput="updateMainResult(${i}, this.value)">
                             </div>
+                        </td>
+                        <td class="px-4 py-3 text-right align-middle">
+                            <div class="font-mono text-blue-300 font-black text-lg" id="idx-pos-${i}">${IUcol}</div>
+                            <div class="text-[9px] text-slate-500 uppercase font-black">IU Impact</div>
                         </td>`;
 
-                    mainTable.appendChild(tr);
-                }
+                mainTable.appendChild(tr);
             }
 
             // 2. Render Lower Deck (Draggable)
             const lowerTable = document.getElementById('lowerPlanTable');
+            if (!lowerTable) return;
             lowerTable.innerHTML = '';
 
             // Calculate Volumes & Weights for Display
@@ -1264,34 +1271,39 @@
 
                 // Draggable Items Cell
                 let itemsHtml = `<div class="drop-zone min-h-[40px] flex flex-wrap gap-2 p-1 rounded ${isVolExceeded || isWtExceeded ? 'bg-red-900/20' : ''}" 
-                                      ondragover="handleDragOver(event)" 
-                                      ondrop="handleDrop(event, '${key}')">`;
+                                          ondragover="handleDragOver(event)" 
+                                          ondrop="handleDrop(event, '${key}')">`;
 
                 list.forEach((item, listIdx) => {
                     const vol = item.dims && item.dims.l ? ((item.dims.l * item.dims.w * item.dims.h) / 1000000).toFixed(2) : 0;
                     itemsHtml += `<div class="draggable-item bg-slate-700 hover:bg-slate-600 border border-slate-500 text-xs px-2 py-1 rounded cursor-grab shadow-sm flex flex-col items-center"
-                                       draggable="true" 
-                                       ondragstart="handleDragStart(event, '${key}', ${listIdx})">
-                                    <span class="font-bold text-white">${item.w}kg</span>
-                                    ${vol > 0 ? `<span class="text-[9px] text-slate-400">${vol}m³</span>` : ''}
-                                  </div>`;
+                                           draggable="true" 
+                                           ondragstart="handleDragStart(event, '${key}', ${listIdx})">
+                                        <span class="font-bold text-white">${item.w}kg</span>
+                                        ${vol > 0 ? `<span class="text-[9px] text-slate-400">${vol}m³</span>` : ''}
+                                      </div>`;
                 });
 
                 if (list.length === 0) itemsHtml += `<span class="text-slate-600 text-xs italic p-1 pointer-events-none">Drop here</span>`;
                 itemsHtml += `</div>`;
 
+                const cptIdxImpact = getLowerDeckIndex(key, weight);
+
                 tr.innerHTML =
                     `<td class="px-4 py-2 border-b border-slate-700 align-top w-24">
-                        <div class="text-slate-300 font-bold">CPT ${idx + 1}</div>
-                        <div class="text-[10px] text-slate-500">Max ${limit}kg</div>
-                    </td>
-                    <td class="px-4 py-2 border-b border-slate-700 align-top">
-                        ${itemsHtml}
-                        ${isVolExceeded ? `<div class="text-[10px] text-red-400 mt-1">⚠️ Vol Limit Exceeded! (${currentGroupVol.toFixed(2)} / ${volLimit})</div>` : ''}
-                    </td>
-                    <td class="px-4 py-2 border-b border-slate-700 text-right align-top w-24">
-                        <div class="font-bold ${isWtExceeded ? 'text-red-400' : 'text-slate-200'}">${weight} kg</div>
-                    </td>`;
+                            <div class="text-slate-300 font-bold">CPT ${idx + 1}</div>
+                            <div class="text-[10px] text-slate-500">Max ${limit}kg</div>
+                        </td>
+                        <td class="px-4 py-2 border-b border-slate-700 align-top">
+                            ${itemsHtml}
+                            ${isVolExceeded ? `<div class="text-[10px] text-red-400 mt-1">⚠️ Vol Limit Exceeded! (${currentGroupVol.toFixed(2)} / ${volLimit})</div>` : ''}
+                        </td>
+                        <td class="px-4 py-2 border-b border-slate-700 text-right align-top w-24">
+                            <div class="font-bold font-mono ${isWtExceeded ? 'text-red-400' : 'text-slate-200'}">${weight} kg</div>
+                        </td>
+                        <td class="px-4 py-2 border-b border-slate-700 text-right align-top w-24">
+                            <div class="font-black font-mono text-indigo-400 text-lg">${cptIdxImpact.toFixed(2)}</div>
+                        </td>`;
 
                 lowerTable.appendChild(tr);
             });
@@ -1302,20 +1314,17 @@
             const val = parseFloat(newVal) || 0;
             state.mainDeck[posIndex] = val;
             calculateSummary();
-            // We do NOT re-render results here to keep focus on input
-            // But we must update the specific weight display in the card if distinct?
-            // Actually, re-rendering might kill input focus.
-            // Let's just update summary values.
-            // But if we want the "Box" to update size/color, we might need manual DOM update for that row.
 
-            // Allow "Box" update without losing focus:
             const row = document.querySelector(`#mainPlanTable tr:nth-child(${posIndex + 1})`);
             if (row) {
-                const boxContainer = row.querySelector('.cursor-grab')?.parentElement; // Rough finding
-                // Actually, calculateSummary updates global state.
-                // We should update the specific row's "Cargo Box" text if it exists.
-                const wtSpan = row.querySelector('.font-mono span'); // The weight text in the card
+                const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
+                // Update Card
+                const wtSpan = row.querySelector('.font-mono span');
                 if (wtSpan) wtSpan.textContent = val + " kg";
+
+                // Update Index Impact Cell
+                const idxDiv = document.getElementById(`idx-pos-${posIndex}`);
+                if (idxDiv) idxDiv.textContent = (val * (coeffs[posIndex] || 0)).toFixed(2);
             }
             saveState();
         };
@@ -1445,6 +1454,7 @@
             const loadWt = totalMainWt + totalLowerWt;
             const loadIdx = totalMainIdx + totalLowerIdx;
 
+
             // --- RESTORED LOGIC ---
             // Get inputs
             const fobInput = document.querySelector('input[data-field="fob"]');
@@ -1452,8 +1462,6 @@
             const fob = parseFloat(fobInput ? fobInput.value : 0) || 0;
             const trip = parseFloat(tripInput ? tripInput.value : 0) || 0;
 
-            // Fixed values (DOW/DOI should ideally be inputs, but using defaults for now per previous code)
-            // Fixed values (DOW/DOI should ideally be inputs, but using defaults for now per previous code)
             const dow = state.dow;
             const dowIdx = state.dowIndex;
 
@@ -1491,6 +1499,11 @@
             updateVal('val-lw-wt', lw);
             updateVal('val-lw-idx', lwIdx);
         }
+
+
+
+
+
 
         function updateVal(id, val) {
             const el = document.getElementById(id);
