@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Cargo Trim">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3122/3122410.png">
     <title>Cargo Trim Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -102,7 +102,7 @@
                 <div class="flex items-center gap-2">
                     <h1 class="text-2xl font-black text-white leading-tight">CARGO TRIM</h1>
                     <span
-                        class="bg-blue-600/30 text-blue-400 text-[8px] px-1.5 py-0.5 rounded border border-blue-500/20 font-black">v1.9.1</span>
+                        class="bg-blue-600/30 text-blue-400 text-[8px] px-1.5 py-0.5 rounded border border-blue-500/20 font-black">v1.9.0</span>
                 </div>
                 <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">DOW & Live Trim • <span
                         class="text-green-500">Active</span></div>
@@ -164,35 +164,15 @@
                         </select>
                     </div>
 
-                    <!-- Tech Kit 1 Toggle -->
+                    <!-- Tech Kit Toggle -->
                     <div class="flex flex-col items-end">
-                        <label class="text-xs text-slate-400 mb-1">Tech Kit 1 (+208kg)</label>
+                        <label class="text-xs text-slate-400 mb-1">Tech Kit (+208kg)</label>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="techKitToggle" class="sr-only peer">
                             <div
                                 class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
                             </div>
                         </label>
-                    </div>
-
-                    <!-- Tech Kit 2 Toggle & Cpt Selector -->
-                    <div class="col-span-2 grid grid-cols-2 gap-4 items-center border-t border-slate-700/50 pt-2">
-                        <div class="flex flex-col">
-                            <label class="text-xs text-slate-400 mb-1">Tech Kit 2 (+300kg)</label>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="techKit2Toggle" class="sr-only peer">
-                                <div
-                                    class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
-                                </div>
-                            </label>
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="text-xs text-slate-400 mb-1">TK2 Location</label>
-                            <select id="techKit2Cpt" class="bg-slate-700 border border-slate-600 rounded p-1 text-white text-xs outline-none focus:border-blue-500 font-bold">
-                                <option value="cpt4">Compartment 4</option>
-                                <option value="cpt3">Compartment 3</option>
-                            </select>
-                        </div>
                     </div>
 
                     <!-- Calculated DOW Display -->
@@ -245,64 +225,64 @@
             <div class="mb-4">
                 <label class="text-[10px] text-slate-500 uppercase mb-1 block">Quick Add (Weight Only)</label>
                 <div class="grid grid-cols-5 gap-1" id="bulkList">
-                    <input type="number" inputmode="decimal" data-idx="0" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="0" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="1" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="1" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="2" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="2" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="3" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="3" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="4" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="4" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="5" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="5" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="6" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="6" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="7" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="7" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="8" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="8" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="9" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="9" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="10" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="10" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="11" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="11" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="12" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="12" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="13" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="13" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="14" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="14" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="15" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="15" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="16" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="16" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="17" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="17" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="18" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="18" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="19" oninput="updateBulkItem(this)"
+                    <input type="number" data-idx="19" oninput="updateBulkItem(this)"
                         class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
                         placeholder="0">
                 </div>
@@ -313,13 +293,13 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-slate-500 uppercase">Qty</label>
-                        <input type="number" id="batchQty" inputmode="decimal"
+                        <input type="number" id="batchQty"
                             class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
                             placeholder="10">
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-500 uppercase">Wt/Pc (kg)</label>
-                        <input type="number" id="batchWt" inputmode="decimal"
+                        <input type="number" id="batchWt"
                             class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
                             placeholder="50">
                     </div>
@@ -327,13 +307,13 @@
                 <div>
                     <label class="text-[10px] text-slate-500 uppercase">Dims (L x W x H) cm</label>
                     <div class="grid grid-cols-3 gap-1">
-                        <input type="number" id="batchL" inputmode="decimal"
+                        <input type="number" id="batchL"
                             class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
                             placeholder="L">
-                        <input type="number" id="batchW" inputmode="decimal"
+                        <input type="number" id="batchW"
                             class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
                             placeholder="W">
-                        <input type="number" id="batchH" inputmode="decimal"
+                        <input type="number" id="batchH"
                             class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
                             placeholder="H">
                     </div>
@@ -490,15 +470,10 @@
                             <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-rem-wt">0.0</td>
                             <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-idx">0.0</td>
                         </tr>
-                        <tr>
+                        <tr class="border-t border-slate-600">
                             <td class="px-4 py-2">Landing Weight (LW)</td>
                             <td class="px-4 py-2 text-right font-mono" id="val-lw-wt">0.0</td>
                             <td class="px-4 py-2 text-right font-mono" id="val-lw-idx">0.0</td>
-                        </tr>
-                        <tr class="bg-blue-900/20 border-t border-blue-500/30">
-                            <td class="px-4 py-2 font-bold text-blue-300">Max Payload</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold text-blue-300" id="val-max-payload">0.0</td>
-                            <td class="px-4 py-2 text-right font-xs text-slate-500" id="val-payload-status">---</td>
                         </tr>
                     </tbody>
                 </table>
@@ -509,15 +484,6 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registered'))
-                    .catch(err => console.log('Service Worker registration failed', err));
-            });
-        }
-
         const PMC_COEFFICIENTS = [-0.0086, -0.0065, -0.0052, -0.0039, -0.0024, -0.0011, 0.0002, 0.0015, 0.0027, 0.0040, 0.0053, 0.0066, 0.0079];
         const PAG_COEFFICIENTS = [-0.0086, -0.0074, -0.0063, -0.0051, -0.0039, -0.0027, -0.0015, -0.0003, 0.0009, 0.0020, 0.0032, 0.0044, 0.0056, 0.0068, 0.0080];
 
@@ -532,11 +498,6 @@
             cpt4: [{ max: 67, val: 0 }, { max: 216, val: 1 }, { max: 365, val: 2 }, { max: 514, val: 3 }, { max: 663, val: 4 }, { max: 812, val: 5 }, { max: 961, val: 6 }, { max: 1110, val: 7 }, { max: 1259, val: 8 }, { max: 1408, val: 9 }, { max: 1558, val: 10 }, { max: 1707, val: 11 }, { max: 1856, val: 12 }, { max: 2005, val: 13 }, { max: 2153, val: 14 }, { max: 2303, val: 15 }, { max: 2452, val: 16 }, { max: 2601, val: 17 }, { max: 2750, val: 18 }, { max: 2899, val: 19 }, { max: 3048, val: 20 }, { max: 3198, val: 21 }, { max: 3348, val: 22 }, { max: 3496, val: 23 }, { max: 3646, val: 24 }, { max: 3794, val: 25 }, { max: 3943, val: 26 }, { max: 4092, val: 27 }, { max: 4241, val: 28 }, { max: 4390, val: 29 }, { max: 4539, val: 30 }, { max: 4689, val: 31 }, { max: 4838, val: 32 }, { max: 4987, val: 33 }, { max: 5136, val: 34 }, { max: 5285, val: 35 }, { max: 5434, val: 36 }, { max: 5583, val: 37 }, { max: 5606, val: 38 }]
         };
         const FUEL_TABLE = [{ w: 500, i: 0.08 }, { w: 1000, i: 0.17 }, { w: 1500, i: 0.29 }, { w: 2000, i: 0.40 }, { w: 2500, i: 0.54 }, { w: 3000, i: 0.70 }, { w: 3500, i: 0.86 }, { w: 4000, i: 1.02 }, { w: 4500, i: 1.21 }, { w: 5000, i: 1.40 }, { w: 5500, i: 1.59 }, { w: 6000, i: 1.81 }, { w: 6500, i: 2.03 }, { w: 7000, i: 2.31 }, { w: 7500, i: 2.58 }, { w: 8000, i: 2.86 }, { w: 8500, i: 3.20 }, { w: 9000, i: 3.61 }, { w: 9500, i: 4.01 }, { w: 10000, i: 4.50 }, { w: 10500, i: 5.03 }, { w: 11000, i: 5.57 }, { w: 11500, i: 6.20 }, { w: 12000, i: 6.90 }, { w: 12500, i: 7.64 }, { w: 13000, i: 8.13 }, { w: 13500, i: 8.60 }, { w: 14000, i: 8.26 }, { w: 14500, i: 7.89 }, { w: 15000, i: 7.47 }, { w: 16000, i: 6.64 }, { w: 17000, i: 5.82 }, { w: 18000, i: 5.02 }, { w: 19000, i: 4.21 }, { w: 20000, i: 3.47 }, { w: 21000, i: 2.71 }, { w: 22000, i: 1.99 }, { w: 23000, i: 1.28 }, { w: 24000, i: 0.53 }, { w: 25000, i: -0.17 }, { w: 26000, i: -0.92 }, { w: 27000, i: -1.61 }, { w: 28000, i: -2.36 }, { w: 29000, i: -3.07 }, { w: 30000, i: -3.77 }, { w: 32000, i: -5.36 }, { w: 33000, i: -5.88 }, { w: 35000, i: -7.04 }, { w: 35855, i: -7.47 }];
-
-        const PAYLOAD_LIMITS = {
-            '57': { 'PMC': 34953, 'PAG': 34863 },
-            '58': { 'PMC': 34258, 'PAG': 34168 }
-        };
 
         const FWD_VOL_LIMIT = 19.0;
         const AFT_VOL_LIMIT = 30.7;
@@ -590,8 +551,6 @@
             uldType: 'PMC', // Controls Main Deck Limit/PosCount
             crew: '2+1',
             hasTechKit: false,
-            hasTechKit2: false,
-            techKit2Cpt: 'cpt4',
             dow: 0, dowIndex: 0, fob: 0, trip: 0,
             mainDeck: Array(15).fill(0),
             bulkBatches: [],
@@ -654,20 +613,6 @@
             const techToggle = document.getElementById('techKitToggle');
             techToggle.addEventListener('change', (e) => {
                 state.hasTechKit = e.target.checked;
-                calculateDow();
-                calculate();
-                saveState();
-            });
-
-            document.getElementById('techKit2Toggle').addEventListener('change', (e) => {
-                state.hasTechKit2 = e.target.checked;
-                calculateDow();
-                calculate();
-                saveState();
-            });
-
-            document.getElementById('techKit2Cpt').addEventListener('change', (e) => {
-                state.techKit2Cpt = e.target.value;
                 calculateDow();
                 calculate();
                 saveState();
@@ -904,11 +849,6 @@
                 const tk = document.getElementById('techKitToggle');
                 if (tk) tk.checked = !!state.hasTechKit;
 
-                const tk2 = document.getElementById('techKit2Toggle');
-                if (tk2) tk2.checked = !!state.hasTechKit2;
-
-                setEl('techKit2Cpt', state.techKit2Cpt || 'cpt4');
-
                 const fob = document.querySelector('input[data-field="fob"]');
                 const trp = document.querySelector('input[data-field="trip"]');
                 if (fob) fob.value = state.fob || '';
@@ -970,11 +910,6 @@
             if (state.hasTechKit) {
                 w += 208;
                 i -= 1.0;
-            }
-
-            if (state.hasTechKit2) {
-                w += 300;
-                i += getLowerDeckIndex(state.techKit2Cpt, 300);
             }
 
             state.dow = w;
@@ -1280,7 +1215,7 @@
                         <td class="px-4 py-3 text-right align-middle">
                             <div class="flex items-center justify-end gap-2 w-full">
                                 <div class="flex-1 max-w-[140px]">${cargoBox}</div>
-                                <input type="number" inputmode="decimal"
+                                <input type="number" 
                                     value="${w > 0 ? w : ''}" 
                                     placeholder="0" 
                                     min="0" 
@@ -1563,22 +1498,6 @@
             updateVal('val-trip-idx', remFuelIdx);
             updateVal('val-lw-wt', lw);
             updateVal('val-lw-idx', lwIdx);
-
-            // Payload Status
-            const maxPayload = PAYLOAD_LIMITS[state.acType][state.uldType];
-            updateVal('val-max-payload', maxPayload);
-
-            const statusEl = document.getElementById('val-payload-status');
-            if (statusEl) {
-                if (loadWt > maxPayload) {
-                    statusEl.textContent = 'OVERLOAD';
-                    statusEl.className = 'px-4 py-2 text-right font-bold text-red-500 animate-pulse';
-                } else {
-                    const room = maxPayload - loadWt;
-                    statusEl.textContent = 'Room: ' + room.toFixed(0) + ' kg';
-                    statusEl.className = 'px-4 py-2 text-right text-xs text-slate-500';
-                }
-            }
         }
 
 

@@ -3,6 +3,10 @@ const ASSETS = [
     './',
     './index.html',
     './manifest.json',
+    './icon.png',
+    './lMC.png',
+    './script.js',
+    './data.js',
     'https://cdn-icons-png.flaticon.com/512/3122/3122410.png',
     'https://cdn.tailwindcss.com',
     'https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js'
