@@ -13,79 +13,100 @@
     <title>Cargo Trim Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
         body {
-            background-color: #0f172a;
+            background-color: #080f1f;
+            background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30,64,175,0.18), transparent);
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             overscroll-behavior-y: contain;
             -webkit-tap-highlight-color: transparent;
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+
+        /* Cards */
+        .card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 1rem;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
         }
 
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
+        /* Position cards */
+        .pos-card {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(51,65,85,0.5);
+            border-radius: 0.75rem;
+            padding: 0.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .pos-card:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+        }
+        .pos-card.over-limit {
+            border-color: rgba(239,68,68,0.6);
+            box-shadow: 0 0 0 2px rgba(239,68,68,0.1);
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
+        /* Progress bar */
+        .wt-bar-track {
+            height: 3px;
+            background: rgba(51,65,85,0.6);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .wt-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 0.4s ease;
         }
 
+        /* Inputs */
+        .calc-input {
+            transition: border-color 0.15s;
+        }
+        input[type="number"]:focus { outline: none; }
+
+        /* Drag */
         .draggable-item {
             cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
             touch-action: none;
             -webkit-user-select: none;
             user-select: none;
         }
-
         .draggable-item:active {
             cursor: grabbing;
             transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
             z-index: 50;
         }
-
-        .drop-zone {
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
+        .drop-zone { transition: background-color 0.15s, border-color 0.15s; }
         .drop-zone.drag-over {
-            background-color: rgba(59, 130, 246, 0.3);
+            background-color: rgba(59,130,246,0.15);
             border: 2px dashed #60a5fa;
-            transform: scale(1.01);
         }
 
+        /* Mobile touch targets */
         @media (max-width: 768px) {
-
-            input[type="number"],
-            select,
-            button {
-                font-size: 16px;
-                min-height: 44px;
-            }
-
-            .draggable-item {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+            input[type="number"], select, button { font-size: 16px; }
+            .pos-card input[type="number"] { font-size: 18px; min-height: 36px; }
         }
 
-        .limit-exceeded {
-            color: #ef4444 !important;
-            border-color: #ef4444 !important;
-        }
+        .limit-exceeded { color: #ef4444 !important; border-color: rgba(239,68,68,0.6) !important; }
 
         input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
     </style>
 
     <!-- Mobile Drag-and-Drop Polyfill -->
@@ -225,286 +246,231 @@
         </div>
 
         <!-- Inputs Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            <!-- Main Deck Source -->
-            <div class="lg:col-span-2 bg-slate-800 p-4 rounded-lg shadow-lg">
+            <!-- Main Deck Cargo -->
+            <div class="lg:col-span-2 card p-5">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-semibold text-slate-300">Input: Main Deck Cargo</h3>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wide">Enter Weights (Any Order)</div>
-                </div>
-                <div id="mainDeckGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
-            </div>
-
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-slate-300">Input: Bulk Batches</h3>
-                <div class="text-xs text-right text-blue-400 font-mono" id="totalBulkDisplay">0 / 16520 kg</div>
-            </div>
-
-            <!-- Quick Bulk Grid (Recovered) -->
-            <div class="mb-4">
-                <label class="text-[10px] text-slate-500 uppercase mb-1 block">Quick Add (Weight Only)</label>
-                <div class="grid grid-cols-5 gap-1" id="bulkList">
-                    <input type="number" inputmode="decimal" data-idx="0" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="1" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="2" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="3" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="4" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="5" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="6" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="7" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="8" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="9" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="10" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="11" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="12" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="13" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="14" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="15" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="16" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="17" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="18" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                    <input type="number" inputmode="decimal" data-idx="19" oninput="updateBulkItem(this)"
-                        class="calc-input bg-slate-900 border border-slate-700 rounded p-1 text-center text-xs text-white"
-                        placeholder="0">
-                </div>
-            </div>
-
-            <!-- Batch Entry Form -->
-            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 space-y-3 mb-4">
-                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-[10px] text-slate-500 uppercase">Qty</label>
-                        <input type="number" id="batchQty" inputmode="decimal"
-                            class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
-                            placeholder="10">
+                        <h3 class="font-bold text-white text-base tracking-tight">Main Deck</h3>
+                        <div class="text-[10px] text-slate-500 mt-0.5 uppercase tracking-widest">Pallet weights · per position limits</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 inline-block"></span>FWD
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block ml-1"></span>CTR
+                        <span class="w-2 h-2 rounded-full bg-amber-500 inline-block ml-1"></span>AFT
+                    </div>
+                </div>
+                <div id="mainDeckGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2"></div>
+            </div>
+
+            <!-- Lower Deck / Bulk — properly wrapped in one column -->
+            <div class="card flex flex-col min-h-0">
+                <div class="flex justify-between items-center px-4 py-3 border-b border-slate-700/50">
+                    <h3 class="font-bold text-white text-base tracking-tight">Lower Deck</h3>
+                    <div class="text-[10px] font-mono font-bold bg-slate-800 text-blue-400 px-2 py-1 rounded-lg border border-slate-700/50" id="totalBulkDisplay">0 / 16520 kg</div>
+                </div>
+
+                <!-- Quick Add -->
+                <div class="px-4 pt-3 pb-2 border-b border-slate-700/30">
+                    <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2 block">Quick Add (kg)</label>
+                    <div class="grid grid-cols-5 gap-1" id="bulkList">
+                        <input type="number" inputmode="decimal" data-idx="0" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="1" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="2" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="3" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="4" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="5" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="6" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="7" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="8" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="9" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="10" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="11" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="12" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="13" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="14" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="15" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="16" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="17" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="18" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                        <input type="number" inputmode="decimal" data-idx="19" oninput="updateBulkItem(this)" class="calc-input bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-center text-xs text-white focus:border-blue-500 outline-none" placeholder="0">
+                    </div>
+                </div>
+
+                <!-- Batch Entry Form -->
+                <div class="px-4 py-3 border-b border-slate-700/30 space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Qty</label>
+                            <input type="number" id="batchQty" inputmode="decimal" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-blue-500 outline-none" placeholder="10">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Wt/Pc (kg)</label>
+                            <input type="number" id="batchWt" inputmode="decimal" class="w-full mt-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-blue-500 outline-none" placeholder="50">
+                        </div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-500 uppercase">Wt/Pc (kg)</label>
-                        <input type="number" id="batchWt" inputmode="decimal"
-                            class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-sm"
-                            placeholder="50">
+                        <label class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Dims (L × W × H) cm</label>
+                        <div class="grid grid-cols-3 gap-1 mt-1">
+                            <input type="number" id="batchL" inputmode="decimal" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white text-xs text-center focus:border-blue-500 outline-none" placeholder="L">
+                            <input type="number" id="batchW" inputmode="decimal" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white text-xs text-center focus:border-blue-500 outline-none" placeholder="W">
+                            <input type="number" id="batchH" inputmode="decimal" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white text-xs text-center focus:border-blue-500 outline-none" placeholder="H">
+                        </div>
                     </div>
+                    <button onclick="addBatch()" class="w-full bg-blue-600/70 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-lg transition border border-blue-500/30 tracking-wide">
+                        + ADD BATCH
+                    </button>
+                    <div id="batchError" class="text-[10px] text-red-400 font-bold hidden"></div>
                 </div>
-                <div>
-                    <label class="text-[10px] text-slate-500 uppercase">Dims (L x W x H) cm</label>
-                    <div class="grid grid-cols-3 gap-1">
-                        <input type="number" id="batchL" inputmode="decimal"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="L">
-                        <input type="number" id="batchW" inputmode="decimal"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="W">
-                        <input type="number" id="batchH" inputmode="decimal"
-                            class="bg-slate-800 border border-slate-600 rounded p-1 text-white text-xs text-center"
-                            placeholder="H">
+
+                <!-- Batches List -->
+                <div class="flex-1 overflow-y-auto px-4 py-3 min-h-[80px]" id="batchList">
+                    <div class="text-center text-slate-600 text-xs italic mt-3">No batches added</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action -->
+        <div class="flex flex-col items-center gap-3 py-2">
+            <div class="flex flex-col sm:flex-row gap-3 w-full justify-center max-w-lg">
+                <button id="optimizeBtn"
+                    class="flex-1 bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 active:from-blue-700 active:to-blue-800 px-6 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-blue-900/40 flex items-center justify-center gap-3 border border-blue-500/30">
+                    <span class="text-2xl">⚡</span>
+                    <div class="flex flex-col items-start leading-tight text-left">
+                        <span class="text-lg font-black tracking-wide">AUTO-RELOCATE</span>
+                        <span class="text-[10px] font-normal opacity-60 uppercase tracking-widest">Target Index 20.0</span>
                     </div>
-                </div>
-                <button onclick="addBatch()"
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded transition shadow-lg">
-                    + ADD BATCH
                 </button>
-                <div id="batchError" class="text-[10px] text-red-400 font-bold hidden">Error msg</div>
+                <button id="resetBtn"
+                    class="bg-slate-800 hover:bg-red-600/80 text-slate-400 hover:text-white px-5 py-4 rounded-2xl font-bold transition-all flex flex-row sm:flex-col items-center justify-center gap-2 border border-slate-700 sm:w-20">
+                    <span class="text-xl">↺</span>
+                    <span class="text-[10px] uppercase tracking-widest">Reset</span>
+                </button>
             </div>
-
-            <!-- Batches List -->
-            <div class="flex-1 overflow-y-auto min-h-[150px] space-y-2 pr-1" id="batchList">
-                <!-- Batches injected here -->
-                <div class="text-center text-slate-600 text-xs italic mt-4">No batches added</div>
-            </div>
+            <div id="optStatus" class="text-xs text-yellow-400 h-4 font-mono font-bold tracking-tight"></div>
+            <div id="resetFeedback" class="hidden text-xs text-red-400 font-bold animate-pulse">SYSTEM RESETTING...</div>
         </div>
-    </div>
 
-    <!-- Action -->
-    <div class="flex flex-col items-center space-y-4 my-8">
-        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md px-4">
-            <button id="optimizeBtn"
-                class="flex-1 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 px-6 py-4 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 border border-blue-400">
-                <span class="text-2xl">⚡</span>
-                <div class="flex flex-col items-start leading-tight text-left">
-                    <span class="text-lg">AUTO-RELOCATE</span>
-                    <span class="text-[10px] font-normal opacity-80 uppercase">Target Index 20.0</span>
-                </div>
-            </button>
-            <button id="resetBtn"
-                class="bg-slate-700 hover:bg-red-600 active:bg-red-700 text-slate-300 hover:text-white px-4 py-4 rounded-xl font-bold transition shadow-lg flex flex-row sm:flex-col items-center justify-center gap-2 border border-slate-600 sm:w-24">
-                <span class="text-2xl">↺</span>
-                <span class="text-xs uppercase">Reset All</span>
-            </button>
-        </div>
-        <div id="optStatus" class="text-xs text-yellow-500 h-4 font-mono font-bold tracking-tight"></div>
-        <div id="resetFeedback" class="hidden text-xs text-red-400 font-bold animate-pulse">SYSTEM RESETTING...
-        </div>
-    </div>
+        <!-- RESULTS / PLAN -->
+        <div id="resultsSection" class="hidden space-y-5">
 
-    <!-- RESULTS / PLAN -->
-    <div id="resultsSection" class="hidden space-y-6">
-
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-xl shadow-2xl">
-            <h3 class="text-xl font-bold text-green-400 mb-6 flex items-center gap-2">
-                <span>📋</span> Relocation Plan
-            </h3>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Lower Deck Instructions -->
-                <div class="overflow-x-auto">
-                    <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Lower Deck (Bulk)
-                        Allocation</h4>
-                    <div class="rounded-lg border border-slate-700 min-w-[300px]">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-800 text-slate-300">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">Compartment</th>
-                                    <th class="px-4 py-3 text-left">Assigned Items (kg)</th>
-                                    <th class="px-4 py-3 text-right">Weight</th>
-                                    <th class="px-4 py-3 text-right">Index (IU)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="lowerPlanTable"></tbody>
-                        </table>
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-5 flex items-center gap-2 tracking-tight">
+                    <span>📋</span> Relocation Plan
+                </h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Lower Deck -->
+                    <div class="overflow-x-auto">
+                        <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Lower Deck Allocation</h4>
+                        <div class="rounded-xl border border-slate-700/60 min-w-[300px] overflow-hidden">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-800/80 text-slate-400 text-xs uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Compartment</th>
+                                        <th class="px-4 py-3 text-left">Items</th>
+                                        <th class="px-4 py-3 text-right">Weight</th>
+                                        <th class="px-4 py-3 text-right">Index</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700/50" id="lowerPlanTable"></tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Main Deck Instructions -->
-                <div class="overflow-x-auto">
-                    <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Main Deck
-                        Allocation</h4>
-                    <div class="rounded-lg border border-slate-700 max-h-[400px] overflow-y-auto min-w-[300px]">
-                        <table class="w-full text-sm">
-                            <thead class="bg-slate-800 text-slate-300 sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">Position</th>
-                                    <th class="px-4 py-3 text-right">Weight (kg)</th>
-                                    <th class="px-4 py-3 text-right">Index (IU)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 bg-slate-900/50" id="mainPlanTable"></tbody>
-                        </table>
+                    <!-- Main Deck -->
+                    <div class="overflow-x-auto">
+                        <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Main Deck Allocation</h4>
+                        <div class="rounded-xl border border-slate-700/60 max-h-[400px] overflow-y-auto min-w-[300px]">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-800/80 text-slate-400 text-xs uppercase tracking-wider sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Position</th>
+                                        <th class="px-4 py-3 text-right">Weight (kg)</th>
+                                        <th class="px-4 py-3 text-right">Index (IU)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700/50" id="mainPlanTable"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Loadsheet Summary -->
-        <div class="bg-slate-800 p-4 rounded-lg shadow-lg">
-            <h3 class="font-semibold text-slate-300 mb-4 border-b border-slate-600 pb-1">Projects Loadsheet Summary
-                (After Relocation)</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-slate-400 uppercase bg-slate-700">
-                        <tr>
-                            <th class="px-4 py-2">Item</th>
-                            <th class="px-4 py-2 text-right">Weight (kg)</th>
-                            <th class="px-4 py-2 text-right">Index</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700 text-slate-300">
-                        <tr class="bg-slate-700/50">
-                            <td class="px-4 py-2">
-                                <div class="flex flex-col">
-                                    <span>Total Load</span>
+            <!-- Loadsheet Summary -->
+            <div class="card p-5">
+                <h3 class="font-bold text-white mb-4 pb-3 border-b border-slate-700/50 tracking-tight">
+                    Loadsheet Summary <span class="text-slate-500 font-normal text-sm">(After Relocation)</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-[11px] text-slate-500 uppercase tracking-widest">
+                            <tr>
+                                <th class="px-4 py-2">Item</th>
+                                <th class="px-4 py-2 text-right">Weight (kg)</th>
+                                <th class="px-4 py-2 text-right">Index</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/40 text-slate-300">
+                            <tr class="bg-slate-700/20">
+                                <td class="px-4 py-3">
+                                    <div class="font-medium">Total Load</div>
                                     <div class="flex gap-2 text-[10px] mt-1">
-                                        <span
-                                            class="bg-blue-900/40 text-blue-300 px-1 rounded border border-blue-500/30">Main:
-                                            <span id="val-main-idx" class="font-bold">0.0</span></span>
-                                        <span
-                                            class="bg-indigo-900/40 text-indigo-300 px-1 rounded border border-indigo-500/30">Lower:
-                                            <span id="val-lower-idx" class="font-bold">0.0</span></span>
+                                        <span class="bg-blue-900/40 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/20">Main: <span id="val-main-idx" class="font-bold">0.0</span></span>
+                                        <span class="bg-indigo-900/40 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/20">Lower: <span id="val-lower-idx" class="font-bold">0.0</span></span>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg"
-                                id="val-load-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-yellow-400 font-bold text-lg">
-                                <div class="flex flex-col items-end">
-                                    <span id="val-load-idx">0.0</span>
-                                    <div class="w-32 h-2 bg-slate-600 rounded-full mt-1 overflow-hidden">
-                                        <div id="idx-progress"
-                                            class="h-full bg-blue-500 transition-all duration-500 w-1/2"></div>
+                                </td>
+                                <td class="px-4 py-3 text-right font-mono text-yellow-400 font-bold text-lg" id="val-load-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono text-yellow-400 font-bold text-lg">
+                                    <div class="flex flex-col items-end gap-1">
+                                        <span id="val-load-idx">0.0</span>
+                                        <div class="w-28 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                                            <div id="idx-progress" class="h-full bg-blue-500 transition-all duration-500 rounded-full" style="width:50%"></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="px-4 py-2">Zero Fuel Weight (ZFW)</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold" id="val-zfw-idx">0.0</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2 flex flex-col">
-                                <span>Takeoff Fuel</span>
-                                <span class="text-xs text-slate-500">(FOB - 380 Taxi)</span>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-green-400" id="val-to-fuel-idx">0.0</td>
-                        </tr>
-                        <tr class="bg-slate-700/30 font-bold border-t border-slate-500/50">
-                            <td class="px-4 py-2">TOW</td>
-                            <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-white" id="val-tow-idx">0.0</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2 text-slate-400 flex flex-col">
-                                <span>Remaining Fuel (@ LNDG)</span>
-                                <span class="text-xs text-slate-500">(TO Fuel - Trip Fuel)</span>
-                            </td>
-                            <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-rem-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono text-slate-400" id="val-trip-idx">0.0</td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2">Landing Weight (LW)</td>
-                            <td class="px-4 py-2 text-right font-mono" id="val-lw-wt">0.0</td>
-                            <td class="px-4 py-2 text-right font-mono" id="val-lw-idx">0.0</td>
-                        </tr>
-                        <tr class="bg-blue-900/20 border-t border-blue-500/30">
-                            <td class="px-4 py-2 font-bold text-blue-300">Max Payload</td>
-                            <td class="px-4 py-2 text-right font-mono font-bold text-blue-300" id="val-max-payload">0.0</td>
-                            <td class="px-4 py-2 text-right font-xs text-slate-500" id="val-payload-status">---</td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3">Zero Fuel Weight (ZFW)</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold" id="val-zfw-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold" id="val-zfw-idx">0.0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div>Takeoff Fuel</div>
+                                    <div class="text-[10px] text-slate-500">FOB − 380 taxi</div>
+                                </td>
+                                <td class="px-4 py-3 text-right font-mono text-emerald-400" id="val-to-fuel-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono text-emerald-400" id="val-to-fuel-idx">0.0</td>
+                            </tr>
+                            <tr class="bg-white/5 border-t border-slate-600/40">
+                                <td class="px-4 py-3 font-bold">TOW</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-white" id="val-tow-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-white" id="val-tow-idx">0.0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 text-slate-400">
+                                    <div>Remaining Fuel</div>
+                                    <div class="text-[10px] text-slate-500">TO Fuel − Trip</div>
+                                </td>
+                                <td class="px-4 py-3 text-right font-mono text-slate-400" id="val-trip-rem-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono text-slate-400" id="val-trip-idx">0.0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3">Landing Weight (LW)</td>
+                                <td class="px-4 py-3 text-right font-mono" id="val-lw-wt">0.0</td>
+                                <td class="px-4 py-3 text-right font-mono" id="val-lw-idx">0.0</td>
+                            </tr>
+                            <tr class="bg-blue-950/40 border-t border-blue-500/20">
+                                <td class="px-4 py-3 font-bold text-blue-300">Max Payload</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-blue-300" id="val-max-payload">0.0</td>
+                                <td class="px-4 py-3 text-right text-xs text-slate-500" id="val-payload-status">---</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+
     </div>
 
     <!-- JAVASCRIPT -->
@@ -1029,23 +995,47 @@
         function renderMainDeckInputs() {
             const container = document.getElementById('mainDeckGrid');
             container.innerHTML = '';
-            // Use state.uldType
             const count = state.uldType === 'PMC' ? 13 : 15;
+            const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
+            // Approximate neutral index position
+            const neutral = state.uldType === 'PMC' ? 6 : 7;
 
             for (let i = 0; i < count; i++) {
                 const limit = getMainDeckLimit(state.uldType, i);
-                const val = state.mainDeck[i];
-                const div = document.createElement('div');
-                const coeffs = state.uldType === 'PMC' ? PMC_COEFFICIENTS : PAG_COEFFICIENTS;
-                const idxEffect = val > 0 ? (val * (coeffs[i] || 0)).toFixed(2) : '0.00';
+                const val = state.mainDeck[i] || 0;
+                const idx = val > 0 ? val * (coeffs[i] || 0) : 0;
+                const idxStr = val > 0 ? (idx >= 0 ? '+' : '') + idx.toFixed(2) : '—';
+                const pct = val > 0 ? Math.min(100, (val / limit) * 100) : 0;
+                const isOver = val > limit;
+                const isWarn = !isOver && pct > 80;
 
-                div.innerHTML = '<div class="flex justify-between items-end mb-1">' +
-                    '<label class="text-xs text-slate-400 font-bold">POS ' + (i + 1) + '</label>' +
-                    '<span class="text-[10px] text-blue-400 font-mono">Idx: ' + idxEffect + '</span>' +
+                // Zone colour coding: FWD=sky, CTR=emerald, AFT=amber
+                let zone, zoneClass, barClass;
+                if (i < neutral - 1)      { zone = 'FWD'; zoneClass = 'text-sky-400 bg-sky-400/10'; }
+                else if (i <= neutral + 1) { zone = 'CTR'; zoneClass = 'text-emerald-400 bg-emerald-400/10'; }
+                else                       { zone = 'AFT'; zoneClass = 'text-amber-400 bg-amber-400/10'; }
+
+                if (isOver)       barClass = 'bg-red-500';
+                else if (isWarn)  barClass = 'bg-amber-400';
+                else if (pct > 0) barClass = zone === 'FWD' ? 'bg-sky-500' : zone === 'CTR' ? 'bg-emerald-500' : 'bg-amber-500';
+                else              barClass = 'bg-slate-700';
+
+                const idxColour = idx < -0.01 ? 'text-sky-400' : idx > 0.01 ? 'text-amber-400' : 'text-slate-500';
+
+                const div = document.createElement('div');
+                div.className = 'pos-card' + (isOver ? ' over-limit' : '');
+                div.innerHTML =
+                    '<div class="flex justify-between items-center">' +
+                        '<span class="text-[11px] font-black text-slate-500">P' + (i + 1) + '</span>' +
+                        '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full ' + zoneClass + '">' + zone + '</span>' +
                     '</div>' +
                     '<input type="number" inputmode="decimal" data-field="main-' + i + '" value="' + (val || '') + '" autocomplete="off" ' +
-                    'class="calc-input bg-slate-800 border ' + (val > limit ? 'border-red-500 text-red-400' : 'border-slate-700') + ' rounded p-2 text-right text-white font-mono focus:border-blue-500 outline-none w-full" placeholder="kg">' +
-                    '<div class="text-[10px] text-slate-600 mt-1 text-right">Max ' + limit + '</div>';
+                        'class="calc-input bg-transparent text-center text-lg font-black font-mono ' + (isOver ? 'text-red-400' : 'text-white') + ' focus:outline-none placeholder-slate-700 w-full" placeholder="—">' +
+                    '<div class="wt-bar-track"><div class="wt-bar-fill ' + barClass + '" style="width:' + pct + '%"></div></div>' +
+                    '<div class="flex justify-between items-center">' +
+                        '<span class="text-[9px] text-slate-600 font-mono">' + limit + '</span>' +
+                        '<span class="text-[10px] font-mono font-bold ' + idxColour + '">' + idxStr + '</span>' +
+                    '</div>';
                 container.appendChild(div);
             }
         }
@@ -1063,13 +1053,8 @@
         }
 
         function calculate() {
-            calculateSummary(); // Trigger full loadsheet calc
-            const totalBulk = state.bulkItems.reduce(function (a, b) { return a + (parseFloat(b) || 0) }, 0);
-            const dispEl = document.getElementById('totalBulkDisplay');
-            if (dispEl) {
-                dispEl.textContent = totalBulk + " / " + TOTAL_LOWER_CAPACITY + " kg";
-                dispEl.className = totalBulk > TOTAL_LOWER_CAPACITY ? "text-red-500 font-mono" : "text-blue-400 font-mono";
-            }
+            calculateSummary();
+            updateTotalBulkDisplay();
         }
 
         function optimize() {
@@ -1086,6 +1071,10 @@
                     const checkLimit = (idx) => getMainDeckLimit(state.uldType, idx);
 
                     let mainItems = state.mainDeck.slice(0, count).filter(w => w > 0);
+
+                    // Tech Kit 2 reserves capacity in its compartment
+                    const tk2Reserved = state.hasTechKit2 ? 300 : 0;
+                    const tk2Cpt = state.techKit2Cpt; // 'cpt3' or 'cpt4'
 
                     // Prepare Fixed Bulk Pool (Merge Quick + Batches)
                     let baseBulkPool = [];
@@ -1134,8 +1123,9 @@
                                 const b = (start + k) % 4;
                                 const cptKey = 'cpt' + (b + 1);
 
-                                // 1. Weight Check
-                                if (buckets[b] + item.w > LOWER_DECK_LIMITS[cptKey]) continue;
+                                // 1. Weight Check (subtract TK2 reserved capacity if applicable)
+                                const effectiveLimit = LOWER_DECK_LIMITS[cptKey] - (cptKey === tk2Cpt ? tk2Reserved : 0);
+                                if (buckets[b] + item.w > effectiveLimit) continue;
 
                                 // 2. Volume Check
                                 let groupVol = (b < 2) ? (bucketVols[0] + bucketVols[1] + vol) : (bucketVols[2] + bucketVols[3] + vol);
@@ -1535,7 +1525,7 @@
             const zfwIdx = dowIdx + loadIdx;
 
             // 2. Fuel Index
-            const toFuel = fob - 380; // Taxi fuel
+            const toFuel = Math.max(0, fob - 380); // Taxi fuel (guard against negative)
             const toFuelIdx = interpolateFuelIndex(toFuel);
 
             // 3. TOW
@@ -1543,7 +1533,7 @@
             const towIdx = zfwIdx + toFuelIdx;
 
             // 4. Landing
-            const remFuel = toFuel - trip;
+            const remFuel = Math.max(0, toFuel - trip); // guard against negative remaining fuel
             const remFuelIdx = interpolateFuelIndex(remFuel);
             const lw = zfw + remFuel;
             const lwIdx = zfwIdx + remFuelIdx;
